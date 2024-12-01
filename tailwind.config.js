@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily:{
-        'font-rancho' : [ "Rancho", "cursive"],
-        'font-raleway' : ["Raleway", "sans-serif"],
+        'rancho' : [ "Rancho", "cursive"],
+        'raleway' : ["Raleway", "sans-serif"],
       }
     },
   },

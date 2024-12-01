@@ -6,6 +6,7 @@ import Home from "../pages/Home";
 import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 import UpdateCoffee from "../pages/UpdateCoffee";
+import Users from "../pages/Users";
 
 
 
@@ -17,7 +18,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage></ErrorPage>,
     children:[
         {
-            path: '/home',
+            path: '/',
             element: <Home></Home>
         },
         {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
         {
             path: '/signin',
             element: <SignIn></SignIn>
+        },
+        {
+            path: '/users',
+            element: <Users></Users>
         },
     ]
    }
