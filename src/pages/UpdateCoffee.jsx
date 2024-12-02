@@ -1,5 +1,9 @@
+import { useLoaderData } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const UpdateCoffee = () => {
+    const coffee = useLoaderData()
+    const { _id, name, chef, details, photo,supplier,taste,category } = coffee;
     const handleUpdateSubmit = e =>{
         e.preventDefault();
         const name = e.target.name.value;
@@ -11,7 +15,25 @@ const UpdateCoffee = () => {
         const photo = e.target.photo.value;
 
         const updatedCoffee = { name, chef, supplier, taste, category, details, photo }
-        console.log(updatedCoffee)
+        
+        fetch(`http://localhost:5000/coffees/${_id}`,{
+            method:"PUT",
+            headers:{
+                "content-type" : "application/json"
+            },
+            body:JSON.stringify(updatedCoffee)
+        })
+        .then(res => res.json())
+        .then(data =>{
+            if(data.modifiedCount > 0){
+                Swal.fire({
+                    title: 'success!',
+                    text: 'coffee updated successfully',
+                    icon: 'success',
+                    confirmButtonText: 'Cool'
+                  })
+            }
+        })
         
         
         
@@ -20,7 +42,7 @@ const UpdateCoffee = () => {
     return (
         <div className='lg:w-3/4 mx-auto'>
         <div className="text-center p-10">
-            <h1 className="text-3xl font-bold font-rancho">Update Coffee!</h1>
+            <h1 className="text-3xl font-bold font-rancho">Update Coffee : {name}</h1>
         
         </div>
         <div className="card bg-[#f3f4f0] w-full shrink-0 shadow-2xl">
@@ -31,13 +53,13 @@ const UpdateCoffee = () => {
                         <label className="label">
                             <span className="label-text">Name</span>
                         </label>
-                        <input type="text" name='name'  placeholder="coffee name" className="input input-bordered" required />
+                        <input type="text" name='name' defaultValue={name}  placeholder="coffee name" className="input input-bordered" required />
                     </div>
                     <div className="form-control flex-1">
                         <label className="label">
                             <span className="label-text">Chef</span>
                         </label>
-                        <input type="text" name='chef' placeholder="chef name" className="input input-bordered" required />
+                        <input type="text" name='chef' defaultValue={chef} placeholder="chef name" className="input input-bordered" required />
                     </div>
                 </div>
                 {/* form second row */}
@@ -46,13 +68,13 @@ const UpdateCoffee = () => {
                         <label className="label">
                             <span className="label-text">Supplier</span>
                         </label>
-                        <input type="text" name='supplier'  placeholder="coffee supplier" className="input input-bordered" required />
+                        <input type="text" name='supplier' defaultValue={supplier}  placeholder="coffee supplier" className="input input-bordered" required />
                     </div>
                     <div className="form-control flex-1">
                         <label className="label">
                             <span className="label-text">Taste</span>
                         </label>
-                        <input type="text" name='taste' placeholder="taste name" className="input input-bordered" required />
+                        <input type="text" name='taste' defaultValue={taste} placeholder="taste name" className="input input-bordered" required />
                     </div>
                 </div>
                 {/* form third row */}
@@ -61,13 +83,13 @@ const UpdateCoffee = () => {
                         <label className="label">
                             <span className="label-text">Category</span>
                         </label>
-                        <input type="text" name='category'  placeholder="coffee Category" className="input input-bordered" required />
+                        <input type="text" name='category' defaultValue={category}  placeholder="coffee Category" className="input input-bordered" required />
                     </div>
                     <div className="form-control flex-1">
                         <label className="label">
                             <span className="label-text">Details</span>
                         </label>
-                        <input type="text" name='details' placeholder="Coffee Details" className="input input-bordered" required />
+                        <input type="text" name='details' defaultValue={details} placeholder="Coffee Details" className="input input-bordered" required />
                     </div>
                 </div>
 
@@ -76,7 +98,7 @@ const UpdateCoffee = () => {
                     <label className="label">
                         <span className="label-text">Photo URL</span>
                     </label>
-                    <input type="text" name='photo' placeholder="Photo url" className="input input-bordered" required />
+                    <input type="text" name='photo' defaultValue={photo} placeholder="Photo url" className="input input-bordered" required />
 
                 </div>
                 <div className="form-control mt-6">

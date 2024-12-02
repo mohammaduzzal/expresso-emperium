@@ -7,6 +7,7 @@ import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 import UpdateCoffee from "../pages/UpdateCoffee";
 import Users from "../pages/Users";
+import DetailsCoffee from "../components/DetailsCoffee";
 
 
 
@@ -19,15 +20,22 @@ const router = createBrowserRouter([
     children:[
         {
             path: '/',
-            element: <Home></Home>
+            element: <Home></Home>,
+            loader: ()=> fetch('http://localhost:5000/coffees')
         },
         {
             path: '/addCoffee',
             element: <AddCoffee></AddCoffee>
         },
         {
-            path: '/updateCoffee',
-            element: <UpdateCoffee></UpdateCoffee>
+            path: '/updateCoffee/:id',
+            element: <UpdateCoffee></UpdateCoffee>,
+            loader: ({params})=> fetch(`http://localhost:5000/coffees/${params.id}`)
+        },
+        {
+            path: '/details/:id',
+            element: <DetailsCoffee></DetailsCoffee>,
+            loader: ({params}) =>fetch(`http://localhost:5000/coffees/${params.id}`)
         },
         {
             path: '/signup',
