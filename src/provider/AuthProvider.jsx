@@ -24,6 +24,7 @@ const AuthProvider = ({children}) => {
     const logOut = ()=>{
         setLoading(true)
         return signOut(auth)
+
     }
 
     useEffect(()=>{
@@ -31,7 +32,7 @@ const AuthProvider = ({children}) => {
             setUser(currentUser)
             setLoading(false)
         })
-        return unSubscribe()
+        return ()=> unSubscribe()
     },[])
 
 

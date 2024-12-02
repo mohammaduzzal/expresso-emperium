@@ -1,11 +1,43 @@
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../provider/AuthProvider";
+import Swal from "sweetalert2";
 
 const SignIn = () => {
+  const { signInUser,setUser} = useContext(AuthContext)
+  const navigate = useNavigate()
+  const location = useLocation()
+
     const handleSubmit = e =>{
         e.preventDefault();
         const form = e.target;
         const email = form.email.value;
         const password = form.password.value;
+        signInUser(email,password)
+        .then(res=>{
+          const user = res.user
+          setUser(user)
+           // Redirect to the desired route or home if no prior location is specified
+          const from = location.state?.from || '/'
+          navigate(from, {replace : true})
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Login  successfully!",
+            showConfirmButton: false,
+            timer: 1500
+          });
+
+
+        })
+        .catch(err =>{
+          Swal.fire({
+            icon: "error",
+            title: "Signup failed!",
+            text:  err.message || "Something went wrong.",
+          
+          });
+        })
       
 
     }

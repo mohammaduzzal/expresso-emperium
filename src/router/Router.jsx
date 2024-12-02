@@ -8,6 +8,7 @@ import SignUp from "../pages/SignUp";
 import UpdateCoffee from "../pages/UpdateCoffee";
 import Users from "../pages/Users";
 import DetailsCoffee from "../components/DetailsCoffee";
+import PrivateRoute from "../components/PrivateRoute";
 
 
 
@@ -47,7 +48,8 @@ const router = createBrowserRouter([
         },
         {
             path: '/users',
-            element: <Users></Users>
+            element:<PrivateRoute><Users></Users></PrivateRoute>,
+            loader: () => fetch('http://localhost:5000/users') 
         },
     ]
    }

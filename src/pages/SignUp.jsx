@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { AuthContext } from "../provider/AuthProvider";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, replace, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const SignUp = () => {
   const {createUser,setUser,loginWithGoogle} = useContext(AuthContext)
   const navigate = useNavigate()
+  const location = useLocation()
 
     const handleSubmit = e =>{
         e.preventDefault();
@@ -25,14 +26,31 @@ const SignUp = () => {
         .then(res=> {
           const user = res.user
           setUser(user)
-          Swal.fire({
-            position: "top",
-            icon: "success",
-            title: "Account created successfully!",
-            showConfirmButton: false,
-            timer: 1500
-          });
-          navigate('/')
+          const createdAt = res?.user?.metadata?.creationTime;
+          const newUser = {name,email,createdAt}
+          // save user to the db 
+          fetch('http://localhost:5000/users',{
+            method: "POST",
+            headers:{
+              "content-type" : "application/json"
+            },
+            body: JSON.stringify(newUser)
+          })
+          .then(res=> res.json())
+          .then(data =>{
+            if(data.insertedId){
+              navigate('/')
+              Swal.fire({
+                position: "top",
+                icon: "success",
+                title: "Account created successfully!",
+                showConfirmButton: false,
+                timer: 1500
+              });
+
+            }
+          })
+          
         })
         .catch(err =>{
           Swal.fire({
@@ -52,14 +70,36 @@ const SignUp = () => {
       .then(res =>{
         const user = res.user
         setUser(user)
-        navigate('/')
-        Swal.fire({
+        const createdAt = res?.user?.metadata?.creationTime;
+        const newUser = {
+          name: user.displayName,
+          email: user.email,
+          createdAt
+        }
+        // save user to db
+        fetch('http://localhost:5000/users',{
+          method:"Post",
+          headers: {
+            "content-type" : "application/json"
+          },
+          body: JSON.stringify(newUser)
+        })
+        .then(res =>res.json())
+        .then(()=>{
+           // Redirect to the desired route or home if no prior location is specified
+         const from = location.state?.from || '/'
+         navigate(from, {replace : true})
+         Swal.fire({
           position: "center",
           icon: "success",
           title: "Login  successfully!",
           showConfirmButton: false,
           timer: 1500
         });
+
+        })
+        
+       
       })
     }
 

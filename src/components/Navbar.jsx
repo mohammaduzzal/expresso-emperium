@@ -1,13 +1,21 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import logo from '../assets/logo1.png';
 import navBg from '../assets/nav-bg.jpg'
+import { useContext } from "react";
+import { AuthContext } from "../provider/AuthProvider";
 
 const Navbar = () => {
+  const {logOut,user} = useContext(AuthContext)
+  console.log(user);
+
     const links = <>
     <li className="text-white font-raleway"><NavLink to='/'>Home</NavLink></li>
     <li className="text-white font-raleway"><NavLink to='/addCoffee'>Add Coffee</NavLink></li>
     <li className="text-white font-raleway"><NavLink to='/signUp'>Signup</NavLink></li>
-    <li className="text-white font-raleway"><NavLink to='/users'>Users</NavLink></li>
+    { user && user.email &&(
+  <li className="text-white font-raleway"><NavLink to='/users'>Users</NavLink></li>
+
+    )}
     </>
     return (
         <div className="navbar" style={{
@@ -51,7 +59,16 @@ const Navbar = () => {
     </ul>
   </div>
   <div className="navbar-end">
-    <NavLink to='/signIn'><button className="btn font-raleway">Login</button></NavLink>
+    {
+      user && user.email ? (
+        
+        <button onClick={logOut} className="btn">Logout</button>
+        
+      ) : (
+        <NavLink to='/signIn'><button className="btn font-raleway">Login</button></NavLink>
+      )
+    }
+    
   </div>
 </div>
     );
