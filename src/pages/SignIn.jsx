@@ -17,17 +17,29 @@ const SignIn = () => {
         .then(res=>{
           const user = res.user
           setUser(user)
-           // Redirect to the desired route or home if no prior location is specified
-          const from = location.state?.from || '/'
-          navigate(from, {replace : true})
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Login  successfully!",
-            showConfirmButton: false,
-            timer: 1500
-          });
-
+          const lastSignInTime = res?.user?.metadata?.lastSignInTime
+          const loginInfo = {email,lastSignInTime}
+          fetch('http://localhost:5000/users', {
+            method: "PATCH",
+            headers:{
+              "content-type" : "application/json"
+            },
+            body: JSON.stringify(loginInfo)
+          })
+          .then(res => res.json())
+          .then(() =>{
+            // Redirect to the desired route or home if no prior location is specified
+            const from = location.state?.from || '/'
+            navigate(from, {replace : true})
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Login  successfully!",
+              showConfirmButton: false,
+              timer: 1500
+            });
+          })
+           
 
         })
         .catch(err =>{
